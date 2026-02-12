@@ -14,7 +14,7 @@ var landcover = ee.ImageCollection('ESA/WorldCover/v200')
 // Print land cover info
 print('Land cover:', landcover);
 
-// Display land cover with standard visualization
+// Display land cover with standard visualisation
 Map.addLayer(landcover, {}, 'Land Cover', false);
 
 // Define classification values we care about:
@@ -41,7 +41,7 @@ var riverDistance = rivers.distance({searchRadius: 10000, maxError: 10});
 // Clip to study area
 riverDistance = riverDistance.clip(greaterManchester);
 
-// Visualize distance to rivers (closer = higher risk for contamination spread)
+// Visualise distance to rivers (closer = higher risk for contamination spread)
 var distanceVis = {
   min: 0,
   max: 5000,  // 5km max distance shown
@@ -70,3 +70,32 @@ var soilVis = {
 
 Map.addLayer(soilTexture, soilVis, 'Soil texture', false);
 print('Soil texture:', soilTexture);
+
+// Load elevation data (SRTM Digital Elevation Model - 30m resolution)
+var elevation = ee.Image('USGS/SRTMGL1_003')
+  .select('elevation')
+  .clip(greaterManchester);
+
+// Calculate slope from elevation (in degrees)
+var slope = ee.Terrain.slope(elevation);
+
+// Visualise elevation
+var elevationVis = {
+  min: 0,
+  max: 400,  // meters above sea level
+  palette: ['006600', 'FFFF00', 'FF6600', 'FFFFFF']  // green (low) to white (high)
+};
+
+Map.addLayer(elevation, elevationVis, 'Elevation (m)', false);
+
+// Visualise slope
+var slopeVis = {
+  min: 0,
+  max: 30,  // degrees
+  palette: ['green', 'yellow', 'red']  // green = flat (easy), red = steep (difficult)
+};
+
+Map.addLayer(slope, slopeVis, 'Slope (degrees)', false);
+
+print('Elevation:', elevation);
+print('Slope:', slope);
