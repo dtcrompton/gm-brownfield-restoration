@@ -10,13 +10,13 @@ This project uses satellite imagery and open environmental datasets to model con
 - Terrain characteristics (slope, elevation)
 - Current land cover (built-up and bare areas as brownfield indicators)
 
-High-risk sites are prioritized for ecological assessment and nature-based restoration interventions.
+High-risk sites are prioritised for ecological assessment and nature-based restoration interventions.
 
 ## Tools & Data Sources
 
 **Analysis:**
 - Google Earth Engine (satellite data processing, spatial analysis)
-- R (statistical analysis, visualization)
+- R (statistical analysis, visualisation)
 - QGIS (cartographic output)
 - Python (planned: interactive mapping, ML extension)
 
@@ -35,7 +35,7 @@ High-risk sites are prioritized for ecological assessment and nature-based resto
 
 **Phase 2: Export & Analysis (In Progress)**
 - Export risk raster and statistics
-- R-based visualization and site ranking
+- R-based visualisation and site ranking
 - Summary statistics by district
 
 **Phase 3: Cartography (Planned)**
@@ -56,7 +56,7 @@ gm-brownfield-restoration/
 │   ├── raw/                 # GEE exports
 │   └── processed/           # Cleaned datasets
 ├── r/
-│   └── visualization.R      # Statistical analysis (pending)
+│   └── visualisation.R      # Statistical analysis (pending)
 ├── python/                  # ML extension (pending)
 ├── qgis/
 │   └── final_map.qgz       # Cartographic output (pending)
@@ -68,7 +68,7 @@ gm-brownfield-restoration/
 ## Next Steps
 
 1. Export risk score raster and zonal statistics from GEE
-2. Analyze results in R (district-level summaries, site rankings)
+2. Analyse results in R (district-level summaries, site rankings)
 3. Create polished map outputs in QGIS
 4. Build interactive web map (Python + Folium)
 5. Develop ML model for restoration suitability prediction
