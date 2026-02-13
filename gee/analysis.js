@@ -61,7 +61,7 @@ var soilTexture = ee.Image('OpenLandMap/SOL/SOL_TEXTURE-CLASS_USDA-TT_M/v02')
 // 4-6 = Loam (medium permeability)
 // 7-12 = Sand (high permeability, contamination spreads to groundwater)
 
-// Visualize soil texture
+//Visualise soil texture
 var soilVis = {
   min: 1,
   max: 12,
@@ -121,7 +121,7 @@ Map.addLayer(brownfieldMask.selfMask(), {palette: ['purple']}, 'Likely Brownfiel
 var waterRisk = riverDistance.divide(5000).multiply(-1).add(1).clamp(0, 1);
 // 2. Soil permeability risk (sandy soil = higher groundwater contamination risk)
 // Texture classes 1-12, where higher = sandier
-// Normalize to 0-1 scale
+//Normalise to 0-1 scale
 var soilRisk = soilTexture.divide(12);
 // 3. Slope risk (steeper = harder to remediate, but we'll invert: flatter = more likely industrial site)
 // Slopes in degrees (0-30), flatten = higher development probability
@@ -134,10 +134,10 @@ var landcoverRisk = brownfieldMask;
 // ===== COMBINE RISK FACTORS =====
 // Equal weighting for now (can adjust later)
 var totalRisk = waterRisk.add(soilRisk).add(slopeRisk).add(landcoverRisk);
-// Normalize total risk to 0-1 scale by dividing by number of factors (4)
+//Normalise total risk to 0-1 scale by dividing by number of factors (4)
 totalRisk = totalRisk.divide(4);
 
-// Visualize the final risk score
+//Visualise the final risk score
 var riskVis = {
   min: 0,
   max: 1,

@@ -69,7 +69,7 @@ gm-brownfield-restoration/
 
 **Phase 2: Export & R Analysis**
 1. Export risk score raster and zonal statistics from GEE
-2. R-based visualization (district summaries, site rankings)
+2. R-based visualisation (district summaries, site rankings)
 3. Statistical analysis of high-priority zones
 
 **Phase 3: Cartography**
