@@ -2,7 +2,7 @@
 var greaterManchester = ee.Geometry.Rectangle([-2.7, 53.35, -1.95, 53.65]);
 
 Map.centerObject(greaterManchester, 10);
-Map.addLayer(greaterManchester, {color: 'red'}, 'Greater Manchester bbox', false);
+Map.addLayer(greaterManchester, {color: 'red'}, 'Greater Manchester box', false);
 print('Study area:', greaterManchester);
 
 // Load land cover data (ESA WorldCover 10m resolution)
@@ -17,7 +17,7 @@ print('Land cover:', landcover);
 // Display land cover with standard visualisation
 Map.addLayer(landcover, {}, 'Land Cover', false);
 
-// Define classification values we care about:
+// Define meaningful classification values:
 // 50 = Built-up (urban/industrial)
 // 60 = Bare/sparse vegetation (potential brownfield)
 // 40 = Cropland
@@ -99,3 +99,36 @@ Map.addLayer(slope, slopeVis, 'Slope (degrees)', false);
 
 print('Elevation:', elevation);
 print('Slope:', slope);
+
+// ===== RISK SCORING SYSTEM =====
+// Normalise each factor to 0-1 scale, then combine them
+
+// 1. Distance to water risk (closer = higher risk)
+// Invert so 0m = risk score 1, 5000m = risk score 0
+var waterRisk = riverDistance.divide(5000).multiply(-1).add(1).clamp(0, 1);
+// 2. Soil permeability risk (sandy soil = higher groundwater contamination risk)
+// Texture classes 1-12, where higher = sandier
+// Normalize to 0-1 scale
+var soilRisk = soilTexture.divide(12);
+// 3. Slope risk (steeper = harder to remediate, but we'll invert: flatter = more likely industrial site)
+// Slopes in degrees (0-30), flatten = higher development probability
+var slopeRisk = slope.divide(30).multiply(-1).add(1).clamp(0, 1);
+// 4. Land cover risk (built-up and bare areas = potential brownfield)
+// Create binary masks: 1 if built/bare, 0 otherwise
+var landcoverRisk = builtUp.or(bareSparse);
+
+// ===== COMBINE RISK FACTORS =====
+// Equal weighting for now (can adjust later)
+var totalRisk = waterRisk.add(soilRisk).add(slopeRisk).add(landcoverRisk);
+// Normalize total risk to 0-1 scale by dividing by number of factors (4)
+totalRisk = totalRisk.divide(4);
+
+// Visualize the final risk score
+var riskVis = {
+  min: 0,
+  max: 1,
+  palette: ['green', 'yellow', 'orange', 'red']  // green = low risk, red = high priority
+};
+
+Map.addLayer(totalRisk, riskVis, 'Contamination Risk Score', true);
+print('Total risk score:', totalRisk);
