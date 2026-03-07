@@ -121,3 +121,67 @@ feature_importance = pd.DataFrame({
 }).sort_values('importance', ascending=False)
 
 print(feature_importance)
+
+# ===== VISUALISATIONS =====
+
+import matplotlib.pyplot as plt
+
+# Set style
+plt.style.use('seaborn-v0_8-darkgrid')
+sns.set_palette("husl")
+
+# 1. Confusion Matrix Heatmap
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(
+    confusion_matrix(y_test, y_pred),
+    annot=True,
+    fmt='d',
+    cmap='Blues',
+    xticklabels=['Unsuitable', 'Suitable'],
+    yticklabels=['Unsuitable', 'Suitable'],
+    cbar_kws={'label': 'Number of Sites'},
+    ax=ax
+)
+ax.set_xlabel('Predicted Class', fontsize=12, fontweight='bold')
+ax.set_ylabel('Actual Class', fontsize=12, fontweight='bold')
+ax.set_title('Confusion Matrix: Restoration Suitability Predictions\n(Test Set n=317)', 
+             fontsize=14, fontweight='bold', pad=20)
+
+plt.tight_layout()
+plt.savefig('../outputs/figures/ml_confusion_matrix.png', dpi=300, bbox_inches='tight')
+print("\nSaved: outputs/figures/ml_confusion_matrix.png")
+plt.close()
+
+# 2. Feature Importance Bar Chart
+fig, ax = plt.subplots(figsize=(10, 6))
+colors = ['#2C3E46', '#6B8E71', '#7FAD87', '#9B7DC7', '#B794D9']
+bars = ax.barh(
+    feature_importance['feature'],
+    feature_importance['importance'],
+    color=colors
+)
+
+# Add value labels on bars
+for i, (bar, val) in enumerate(zip(bars, feature_importance['importance'])):
+    ax.text(
+        val + 0.01,
+        i,
+        f'{val:.3f}',
+        va='center',
+        fontweight='bold',
+        fontsize=10
+    )
+
+ax.set_xlabel('Importance Score', fontsize=12, fontweight='bold')
+ax.set_ylabel('Feature', fontsize=12, fontweight='bold')
+ax.set_title('Random Forest Feature Importance\nRestoration Suitability Model', 
+             fontsize=14, fontweight='bold', pad=20)
+ax.set_xlim(0, max(feature_importance['importance']) * 1.15)
+
+plt.tight_layout()
+plt.savefig('../outputs/figures/ml_feature_importance.png', dpi=300, bbox_inches='tight')
+print("Saved: outputs/figures/ml_feature_importance.png")
+plt.close()
+
+print("\n===== VISUALIZATIONS COMPLETE =====")
+print("Charts saved to outputs/figures/")
